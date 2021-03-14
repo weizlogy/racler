@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width"/>
+    <title>RACLER</title>
+
+    <link href="index.css" rel="stylesheet">
+    <script src="commentator.js"></script>
+    <script src="twitchcommentator.js"></script>
+    <script src="index.js"></script>
+  </head>
+
+  <body>
+    <h1>RACLER</h1>
+    <p>Comment View</p>
+    <div class="output" name="comment">
+    </div>
+
+    <div class="flex-container" name="speech-action">
+      <div name="connection">
+        <h3>Connection settings</h3>
+        <div class="item"><span>URL</span>
+          <input type="text" name="connection-url"/>
+        </div>
+        <div class="item"><span>UserName</span>
+          <input type="text" name="connection-username"/>
+        </div>
+        <div class="item"><span>Password</span>
+          <input type="text" name="connection-password"/>
+        </div>
+        <div class="button" name="connection-submit">Start</div>
+      </div>
+      <div name="format">
+        <h3>Comment format settings</h3>
+        <div class="item"><span>Join</span>
+          <input type="text" name="join-format"/>
+        </div>
+        <div class="item"><span>Leave</span>
+          <input type="text" name="leave-format"/>
+        </div>
+        <div class="item"><span>Comment</span>
+          <input type="text" name="comment-format"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-container" name="keyword-action">
+      <div name="comment-keyword">
+        <h3>Comment Keyword settings</h3>
+        <textarea style="width: 100%; height: 100px;"></textarea>
+      </div>
+    </div>
+
+    <div name="speech-speaker">
+      <h3>Speech voice settings</h3>
+      <div><span>Voice</span>
+        <select name="voice-target"></select>
+      </div>
+      <div><span>Volume</span>
+        <input type="range" name="voice-target-volume" min="0" max="1" step="0.1" value="1.0">
+      </div>
+      <div style="margin-left: 23px;"><span>Pitch</span>
+        <input type="range" name="voice-target-pitch" min="0.1" max="10" step="0.1" value="1.0">
+      </div>
+      <div style="margin-left: 24px;"><span>Rate</span>
+        <input type="range" name="voice-target-rate" min="0" max="2" step="0.1" value="1.0">
+      </div>
+      <div class="button" name="speech-speaker-submit">Test</div>
+    </div>
+
+    <div name="explaination" style="margin-top: 100px;">
+      <h2>これは何？</h2>
+      <p>ライブ配信サイトのコメントを読み上げます。</p>
+      <p>コメントのキーワードに反応して自動応答します。</p>
+      <p>使い方は Github 参照のこと。</p>
+    </div>
+
+    <div class="fotter flex-container">
+      <div>v1.0.0</div>
+      <div><a target="_blank" href="https://github.com/weizlogy/racler">Github</div>
+      <div><a target="_blank" href="https://twitter.com/twilightalpaca">Twitter</div>
+    </div>
+
+  </body>
+</html>
