@@ -104,12 +104,13 @@ class TwitchMsg {
 
   #analyze = () => {
     const self = this;
-    const temp = self.#raw.split(' ');
 
     // システムメッセージ
-    if (temp[0].startsWith(':tmi.twitch.tv')) {
+    if (self.#raw.startsWith(':tmi.twitch.tv')) {
       return;
     }
+
+    let temp = self.#raw.split(' ');
 
     // PING
     if (temp.length == 2) {
@@ -118,17 +119,14 @@ class TwitchMsg {
       return;
     }
     // その他
-    self.#tags = temp[0];
-    // :twilightalpaca!twilightalpaca@twilightalpaca.tmi.twitch.tv みたいなのから名前抽出
-    const match = new RegExp(/:(.+?)!/).exec(temp[0]);
-    if (match != null && match.length > 1) {
-      self.#tags = match[1];
-    }
-    self.#command = temp[1];
-    self.#param = temp[2];
-    // ...tmi.twitch.tv PRIVMSG #twilightalpaca :test
+    // コマンド抽出
+    temp = new RegExp(/^:(.+?)!(.+?)@(.+?) (.+?) (.+?)$/).exec(self.#raw);
+
+    self.#tags = temp[1];
+    self.#command = temp[4];
+    self.#param = temp[5];
     if (self.#command == 'PRIVMSG') {
-      self.#param = temp[3].substring(1);
+      self.#param = new RegExp(/^#(.+?) :(.+?)$/).exec(self.#param)[2];
     }
   };
 
