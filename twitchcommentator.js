@@ -78,6 +78,25 @@ class TwitchCommentator {
       });
     });
   };
+
+  stop = () => {
+    const self = this;
+    if (!self.#socket) {
+      return;
+    }
+    self.#socket.close();
+  };
+
+  sendmsg = (name, channel, msg) => {
+    const self = this;
+    if (!self.#socket) {
+      console.log('socket closed.');
+      return;
+    }
+    const text = `PRIVMSG #${channel} :@${name} ${msg}`;
+    console.log(text);
+    self.#socket.send(text);
+  };
 }
 
 class TwitchMsg {
@@ -121,7 +140,12 @@ class TwitchMsg {
     // その他
     // コマンド抽出
     temp = new RegExp(/^:(.+?)!(.+?)@(.+?) (.+?) (.+?)$/).exec(self.#raw);
-
+    if (!temp) {
+      self.#tags = 'unknown';
+      self.#command = 'unknown';
+      self.#param = 'unknown';
+      return;
+    }
     self.#tags = temp[1];
     self.#command = temp[4];
     self.#param = temp[5];

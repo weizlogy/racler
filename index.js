@@ -46,23 +46,23 @@ window.addEventListener('DOMContentLoaded', function() {
     let commentator = new Commentator(url, username, password);
 
     commentator.onjoin = (name) => {
-      const format = document.querySelector('input[name="join-format"]').value || 'Join, ${name}';
+      const format = document.querySelector('input[name="join-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text);
     };
     commentator.onleave = (name) => {
-      const format = document.querySelector('input[name="leave-format"]').value || 'Leave, ${name}';
+      const format = document.querySelector('input[name="leave-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text);
     };
     commentator.oncomment = (name, comment) => {
-      const format = document.querySelector('input[name="comment-format"]').value || '${name}. ${comment}';
+      const format = document.querySelector('input[name="comment-format"]').value || '';
       const text = format.replace('${name}', name).replace('${comment}', comment);
       CreateCommentView(text);
       AlpataSpeaks(text);
-      AutoReply(name, comment);
+      AutoReply(name, comment, username, commentator);
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
@@ -100,11 +100,46 @@ function CreateCommentView(text) {
   output.insertBefore(newNode, output.firstChild)
 }
 
-function AutoReply(name, comment) {
+function AutoReply(name, comment, channel, commentator) {
   // textareaをJSON化
   const keywords =
     JSON.parse('{' + document.querySelector('textarea').value.split('\n')
       .map(v => { return v.replace(/^(.+?): (.+?)$/, '"$1": "$2"') }).join(',') + '}');
+
+  // 特殊コメント対応
+  if (comment.startsWith('!!')) {
+    const temp = new RegExp(/^!!(.+?):(.+?)$/).exec(comment);
+    const cmd = temp[1];
+    const arg = temp[2];
+    console.log(cmd, arg);
+
+    // !!chatcmd: intercmd proc
+    const spcmd = new RegExp(/^(.+?) (.+?)$/).exec(keywords['!!' + cmd]);
+    const intercmd = spcmd[1];
+    const proc = spcmd[2];
+    console.log(intercmd, proc);
+    
+    switch (intercmd) {
+      case 'request':
+        fetch(proc.replace('${arg}', arg), {
+          method: 'POST',
+          mode: "cors",
+          headers: { },
+          body: { }
+        }).then(res => {
+          console.log(res)
+          if (!res.ok) {
+            return res.status + ': ' + res.statusText
+          }
+          return res.text()
+        })
+        .then(text => commentator.sendmsg(name, channel, text))
+        break;
+    }
+    return;
+  }
+
+  // 通常コメント対応
   Object.keys(keywords).forEach(key => {
     if (comment.indexOf(key) == -1) {
       return;

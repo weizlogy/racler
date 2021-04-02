@@ -41,4 +41,12 @@ class Commentator {
     }
     self.#worker.stop();
   };
+
+  sendmsg = (name, channel, msg) => {
+    const self = this;
+    if (self.#worker == null) {
+      return;
+    }
+    self.#worker.sendmsg(name, channel, msg);
+  };
 };

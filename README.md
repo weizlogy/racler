@@ -67,6 +67,29 @@ Read Aloud Comments from Livestreaming sitEs in Real time.
 - 形式
 キーワード: 自動応答文
 
+## 特殊コメント
+
+キーワードに!!を含めた以下のフォーマットを設定するとカスタムチャットコマンドを用意できる。
+
+```
+!!<ChatCommand>: <InternalCommand> <Process>
+```
+
+ex) !!test: request http:~~~?${arg}
+
+で、チャット欄から !!test:xxx と呼んでもらう。xxxは${arg}と入れ替わる。
+
+### ChatCommand
+
+外向けのチャットコマンド。これを使ってもらう。
+
+### InternalCommand
+
+内向けのコマンド。以下のコマンドが用意されている。
+
+- request
+<Process>にURLを指定し、結果をチャット欄に打ち返す。
+
 # Speech voice settings
 
 ## Voice
