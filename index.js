@@ -1,3 +1,5 @@
+var beforeName = '';
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('loaded.');
 
@@ -59,7 +61,11 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     commentator.oncomment = (name, comment) => {
       const format = document.querySelector('input[name="comment-format"]').value || '';
-      const text = format.replace('${name}', name).replace('${comment}', comment);
+      let text = format.replace('${name}', name).replace('${comment}', comment);
+      if (beforeName == name) {
+        text = comment;
+      }
+      beforeName = name;
       CreateCommentView(text);
       AlpataSpeaks(text);
       AutoReply(name, comment, username, commentator);
