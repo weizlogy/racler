@@ -51,13 +51,13 @@ window.addEventListener('DOMContentLoaded', function() {
       const format = document.querySelector('input[name="join-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
-      AlpataSpeaks(text);
+      AlpataSpeaks(text, false);
     };
     commentator.onleave = (name) => {
       const format = document.querySelector('input[name="leave-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
-      AlpataSpeaks(text);
+      AlpataSpeaks(text, false);
     };
     commentator.oncomment = (name, comment) => {
       const format = document.querySelector('input[name="comment-format"]').value || '';
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', function() {
       }
       beforeName = name;
       CreateCommentView(text);
-      AlpataSpeaks(text);
+      AlpataSpeaks(text, true);
       AutoReply(name, comment, username, commentator);
     };
     commentator.onerror = (error) => {
@@ -78,7 +78,7 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
-    AlpataSpeaks("吾輩はアルパカである。名前はまだない。");
+    AlpataSpeaks("吾輩はアルパカである。名前はまだない。", false);
   }
 
 });
@@ -86,8 +86,12 @@ window.addEventListener('DOMContentLoaded', function() {
 /**
  * 音声合成処理.
  * @param {string} text speakする文字列
+ * @param {boolean} isPriorize 優先するか？(true: する / false: しない)
  */
-function AlpataSpeaks(text) {
+function AlpataSpeaks(text, isPriorize) {
+  if (isPriorize) {
+    speechSynthesis.cancel();
+  }
   const selectbox = document.querySelector(`select[name="voice-target"]`)
   const voice = speechSynthesis.getVoices()[selectbox.selectedIndex];
   const utter = new SpeechSynthesisUtterance(text);
@@ -150,6 +154,6 @@ function AutoReply(name, comment, channel, commentator) {
     if (comment.indexOf(key) == -1) {
       return;
     }
-    AlpataSpeaks(keywords[key]);
+    AlpataSpeaks(keywords[key], false);
   });
 }
