@@ -1,3 +1,5 @@
+var translate = new RTAWTranslate();
+
 var beforeName = '';
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -69,12 +71,24 @@ window.addEventListener('DOMContentLoaded', function() {
       CreateCommentView(text);
       AlpataSpeaks(text, true);
       AutoReply(name, comment, username, commentator);
+      AlpacaTranslate(name, comment);
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
     };
 
     commentator.start();
+
+    // 翻訳処理のイベントハンドラー
+    translate.ondone = (name, translated) => {
+      const username = document.querySelector('input[name="connection-username"]').value;
+      commentator.sendmsg(username, username, `[TRANSLATE] ${name} => ${translated}`);
+    };
+    translate.onerror = (name, error) => {
+      const username = document.querySelector('input[name="connection-username"]').value;
+      commentator.sendmsg(username, username, `[TRANSLATE] ${name} => ${error}`);
+    };
+
   }
 
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
@@ -101,6 +115,14 @@ function AlpataSpeaks(text, isPriorize) {
   utter.voice = voice;
   utter.lang = voice.lang;
   speechSynthesis.speak(utter);
+}
+
+function AlpacaTranslate(name, text) {
+  // 翻訳情報取得
+  const apikey = document.querySelector('input[name="gas-deploy-key"]').value || 'AKfycbx76Gd_ytJJxInNVqVMUhEXpzEL1zsZpb_vRw-Z7S3ZR6n-5dM'
+  const target = document.querySelector('input[name="gas-target"]').value || 'ja'
+  // 翻訳元を指定しない場合は自動判定するということなので
+  translate.exec(text, apikey, '', target, name);
 }
 
 function CreateCommentView(text) {

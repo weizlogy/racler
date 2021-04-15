@@ -2,7 +2,7 @@
 
 Read Aloud Comments from Livestreaming sitEs in Real time.
 
-ライブ配信サイトのコメントを読み上げる。
+ライブ配信サイトのコメントを読み上げる。自動翻訳機能付き。
 
 コメントのキーワードに反応して自動応答する。
 
@@ -58,6 +58,31 @@ Read Aloud Comments from Livestreaming sitEs in Real time.
 
 - ${comment}
 コメントに置き換わる。
+
+# Comment translate settings
+
+## GAS deploy key
+
+翻訳機能を持つgoogle apps scriptのデプロイキーを設定する。
+
+デフォルト：アルパカさんの
+
+落ちてる場合は自分で用意すること。
+
+``` js
+// サンプル
+function doGet(e) {
+  var p = e.parameter;
+  var translatedText = LanguageApp.translate(p.text, p.source, p.target);
+  return ContentService.createTextOutput(e.parameter.callback + '({"translated" : "' + translatedText + '"});').setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+```
+
+## Target lang
+
+翻訳対象の言語を設定する。
+
+デフォルト：ja
 
 # Comment Keyword settings
 

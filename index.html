@@ -5,6 +5,8 @@
     <title>RACLER</title>
 
     <link href="index.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="translate.js"></script>
     <script src="commentator.js"></script>
     <script src="twitchcommentator.js"></script>
     <script src="index.js"></script>
@@ -42,6 +44,15 @@
           <input type="text" name="comment-format"/>
         </div>
       </div>
+      <div name="comment-translate">
+        <h3>Comment translate settings</h3>
+        <div class="item"><span>GAS deploy key</span>
+          <input type="text" name="gas-deploy-key"/>
+        </div>
+        <div class="item"><span>Target lang</span>
+          <input type="text" name="gas-target"/>
+        </div>
+      </div>
     </div>
 
     <div class="flex-container" name="keyword-action">
@@ -76,7 +87,7 @@
     </div>
 
     <div class="fotter flex-container">
-      <div>v1.0.2</div>
+      <div>v1.1.0</div>
       <div><a target="_blank" href="https://github.com/weizlogy/racler">Github</div>
       <div><a target="_blank" href="https://twitter.com/twilightalpaca">Twitter</div>
     </div>
