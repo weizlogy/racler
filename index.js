@@ -69,8 +69,10 @@ window.addEventListener('DOMContentLoaded', function() {
       }
       beforeName = name;
       CreateCommentView(text);
-      AlpataSpeaks(text, true);
-      AutoReply(name, comment, username, commentator);
+      if (!comment.startsWith('!!')) {
+        AlpataSpeaks(text, true);
+      }
+      CheckCommand(name, comment, username, commentator);
       AlpacaTranslate(name, comment);
     };
     commentator.onerror = (error) => {
@@ -82,11 +84,11 @@ window.addEventListener('DOMContentLoaded', function() {
     // 翻訳処理のイベントハンドラー
     translate.ondone = (name, translated) => {
       const username = document.querySelector('input[name="connection-username"]').value;
-      commentator.sendmsg(username, username, `[TRANSLATE] ${name} => ${translated}`);
+      commentator.sendmsg(username, username, `${name} => ${translated}`);
     };
     translate.onerror = (name, error) => {
       const username = document.querySelector('input[name="connection-username"]').value;
-      commentator.sendmsg(username, username, `[TRANSLATE] ${name} => ${error}`);
+      commentator.sendmsg(username, username, `${name} => ${error}`);
     };
 
   }
@@ -132,7 +134,7 @@ function CreateCommentView(text) {
   output.insertBefore(newNode, output.firstChild)
 }
 
-function AutoReply(name, comment, channel, commentator) {
+function CheckCommand(name, comment, channel, commentator) {
   // textareaをJSON化
   const keywords =
     JSON.parse('{' + document.querySelector('textarea').value.split('\n')
