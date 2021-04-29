@@ -71,9 +71,9 @@ window.addEventListener('DOMContentLoaded', function() {
       CreateCommentView(text);
       if (!comment.startsWith('!!')) {
         AlpataSpeaks(text, true);
+        AlpacaTranslate(name, comment);
       }
       CheckCommand(name, comment, username, commentator);
-      AlpacaTranslate(name, comment);
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
