@@ -2,6 +2,8 @@ var translate = new RTAWTranslate();
 
 var beforeName = '';
 
+var logins = {};
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('loaded.');
 
@@ -54,12 +56,16 @@ window.addEventListener('DOMContentLoaded', function() {
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text, false);
+      logins[name] = 'join';
+      updateLoginView();
     };
     commentator.onleave = (name) => {
       const format = document.querySelector('input[name="leave-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text, false);
+      logins[name] = 'leave';
+      updateLoginView();
     };
     commentator.oncomment = (name, comment) => {
       const format = document.querySelector('input[name="comment-format"]').value || '';
@@ -179,5 +185,16 @@ function CheckCommand(name, comment, channel, commentator) {
       return;
     }
     AlpataSpeaks(keywords[key], false);
+  });
+}
+
+function updateLoginView() {
+  const view = document.querySelector('div[name="login"]');
+  view.innerHTML = '';
+
+  Object.keys(logins).forEach(value => {
+    const login = document.createElement('div');
+    login.innerHTML = `<span class="${logins[value]}">●</span><span>${value}</span>`;
+    view.appendChild(login);
   });
 }
