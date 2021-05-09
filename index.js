@@ -56,7 +56,8 @@ window.addEventListener('DOMContentLoaded', function() {
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text, false);
-      logins[name] = 'join';
+      logins[name] = logins[name] || { status: '', comment: 0 };
+      logins[name].status = 'join';
       updateLoginView();
     };
     commentator.onleave = (name) => {
@@ -64,7 +65,7 @@ window.addEventListener('DOMContentLoaded', function() {
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       AlpataSpeaks(text, false);
-      logins[name] = 'leave';
+      logins[name].status = 'leave';
       updateLoginView();
     };
     commentator.oncomment = (name, comment) => {
@@ -80,6 +81,7 @@ window.addEventListener('DOMContentLoaded', function() {
         AlpacaTranslate(name, comment);
       }
       CheckCommand(name, comment, username, commentator);
+      logins[name].comment += 1;
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
@@ -112,7 +114,8 @@ window.addEventListener('DOMContentLoaded', function() {
  */
 function AlpataSpeaks(text, isPriorize) {
   if (isPriorize) {
-    speechSynthesis.cancel();
+    // 一時的にキャンセル
+    // speechSynthesis.cancel();
   }
   const selectbox = document.querySelector(`select[name="voice-target"]`)
   const voice = speechSynthesis.getVoices()[selectbox.selectedIndex];
@@ -192,9 +195,21 @@ function updateLoginView() {
   const view = document.querySelector('div[name="login"]');
   view.innerHTML = '';
 
-  Object.keys(logins).forEach(value => {
+  // ステータス > コメント > 名前　順
+  Object.keys(logins).sort((v1, v2) => {
+    const c1 = logins[v1].status;
+    const c2 = logins[v2].status;
+    if (c1 == c2) {
+      const comment = logins[v2].comment - logins[v1].comment;
+      if (comment != 0) {
+        return comment;
+      }
+      return v1 > v2 ? 1 : -1;
+    }
+    return c1 > c2 ? 1 : -1;
+  }).forEach(value => {
     const login = document.createElement('div');
-    login.innerHTML = `<span class="${logins[value]}">●</span><span>${value}</span>`;
+    login.innerHTML = `<span class="${logins[value].status}">●</span><span> ${value} </span><span> - ${logins[value].comment}</span>`;
     view.appendChild(login);
   });
 }
