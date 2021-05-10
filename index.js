@@ -77,8 +77,10 @@ window.addEventListener('DOMContentLoaded', function() {
       beforeName = name;
       CreateCommentView(text);
       if (!comment.startsWith('!!')) {
-        AlpataSpeaks(text, true);
-        AlpacaTranslate(name, comment);
+        if (username != name) {
+          AlpataSpeaks(text, true);
+          AlpacaTranslate(name, comment);
+        }
       }
       CheckCommand(name, comment, username, commentator);
       logins[name].comment += 1;
