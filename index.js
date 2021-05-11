@@ -94,11 +94,11 @@ window.addEventListener('DOMContentLoaded', function() {
     // 翻訳処理のイベントハンドラー
     translate.ondone = (name, translated) => {
       const username = document.querySelector('input[name="connection-username"]').value;
-      commentator.sendmsg(username, username, `${name} => ${translated}`);
+      CreateCommentView(`${name} => ${translated}`);
     };
     translate.onerror = (name, error) => {
       const username = document.querySelector('input[name="connection-username"]').value;
-      commentator.sendmsg(username, username, `${name} => ${error}`);
+      CreateCommentView(`${name} => ${error}`);
     };
 
   }
