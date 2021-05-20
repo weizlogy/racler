@@ -23,8 +23,9 @@ class RTAWTranslate {
       console.log('translate-done', data);
       const translated = data["translated"];
       const detected = data["detected"];
-      // 翻訳前後が同じなら無視する
+      // 翻訳前後が同じなら翻訳結果を無視する
       if (text == translated) {
+        self.ondone(name, text);
         return;
       }
       self.ondone(name, text, translated, detected.toLowerCase());

@@ -96,7 +96,9 @@ window.addEventListener('DOMContentLoaded', function() {
       if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
         AlpataSpeaks(text, false, detected);
       }
-      AlpataSpeaks(translated, true);
+      if (translated) {
+        AlpataSpeaks(translated, true);
+      }
     };
     translate.onerror = (name, text, error) => {
       CreateCommentView(`${name} => ${error}`);
