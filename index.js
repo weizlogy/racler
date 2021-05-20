@@ -78,7 +78,6 @@ window.addEventListener('DOMContentLoaded', function() {
       CreateCommentView(text);
       if (!comment.startsWith('!!')) {
         if (username != name) {
-          AlpataSpeaks(text, true);
           AlpacaTranslate(name, comment);
         }
       }
@@ -92,13 +91,16 @@ window.addEventListener('DOMContentLoaded', function() {
     commentator.start();
 
     // 翻訳処理のイベントハンドラー
-    translate.ondone = (name, translated) => {
-      const username = document.querySelector('input[name="connection-username"]').value;
-      CreateCommentView(`${name} => ${translated}`);
+    translate.ondone = (name, text, translated, detected) => {
+      CreateCommentView(`${name} => (${detected}) ${translated}`);
+      if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
+        AlpataSpeaks(text, false, detected);
+      }
+      AlpataSpeaks(translated, true);
     };
-    translate.onerror = (name, error) => {
-      const username = document.querySelector('input[name="connection-username"]').value;
+    translate.onerror = (name, text, error) => {
       CreateCommentView(`${name} => ${error}`);
+      AlpataSpeaks(text, true);
     };
 
   }
@@ -114,19 +116,42 @@ window.addEventListener('DOMContentLoaded', function() {
  * @param {string} text speakする文字列
  * @param {boolean} isPriorize 優先するか？(true: する / false: しない)
  */
-function AlpataSpeaks(text, isPriorize) {
+function AlpataSpeaks(text, isPriorize, detected) {
   if (isPriorize) {
     // 一時的にキャンセル
     // speechSynthesis.cancel();
   }
+
   const selectbox = document.querySelector(`select[name="voice-target"]`)
-  const voice = speechSynthesis.getVoices()[selectbox.selectedIndex];
+
+  // 言語に応じて音声選択
+  let voice = speechSynthesis.getVoices()[selectbox.selectedIndex];
+  if (detected && (detected != document.querySelector('input[name="gas-target"]').value || 'ja')) {
+    let tempVoice = speechSynthesis.getVoices().find(value => value.lang.startsWith(detected));
+    if (tempVoice) {
+      voice = tempVoice;
+      console.log('voice auto selected.', voice);
+    } else {
+      console.log('cant find voice.', detected);
+    }
+  }
+
   const utter = new SpeechSynthesisUtterance(text);
   utter.volume = document.querySelector(`input[name="voice-target-volume"]`).value
   utter.pitch = document.querySelector(`input[name="voice-target-pitch"]`).value
   utter.rate = document.querySelector(`input[name="voice-target-rate"]`).value
   utter.voice = voice;
   utter.lang = voice.lang;
+
+  utter.onerror = (event) => {
+    console.log(event.error);
+    speechSynthesis.cancel();
+  };
+
+  utter.onend = (event) => {
+    console.log('speech end.');
+  };
+
   speechSynthesis.speak(utter);
 }
 

@@ -1,6 +1,6 @@
 class RTAWTranslate {
 
-  ondone = (translated) => {};
+  ondone = (name, text, translated, detected) => { console.log(name, translated, detected); };
   onerror = (error) => {};
 
   constructor() { };
@@ -20,14 +20,17 @@ class RTAWTranslate {
       jsonpCallback: "test",
       timeout: 10000
     }).done(function(data) {
+      console.log('translate-done', data);
       const translated = data["translated"];
+      const detected = data["detected"];
       // 翻訳前後が同じなら無視する
       if (text == translated) {
         return;
       }
-      self.ondone(name, translated);
+      self.ondone(name, text, translated, detected.toLowerCase());
     })
     .fail(function(data) {
+      console.log('translate-fail', data);
       self.onerror(name, data);
     });
   };
