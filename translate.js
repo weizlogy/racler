@@ -22,13 +22,13 @@ class RTAWTranslate {
     }).done(function(data) {
       console.log('translate-done', data);
       const translated = data["translated"];
-      const detected = data["detected"];
+      const detected = data["detected"].toLowerCase();
       // 翻訳前後が同じなら翻訳結果を無視する
-      if (text == translated) {
+      if (detected == target) {
         self.ondone(name, text);
         return;
       }
-      self.ondone(name, text, translated, detected.toLowerCase());
+      self.ondone(name, text, translated, detected);
     })
     .fail(function(data) {
       console.log('translate-fail', data);
