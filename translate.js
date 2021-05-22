@@ -25,7 +25,7 @@ class RTAWTranslate {
       const detected = data["detected"].toLowerCase();
       // 翻訳前後が同じなら翻訳結果を無視する
       if (detected == target) {
-        self.ondone(name, text);
+        self.ondone(name, text, text, target);
         return;
       }
       self.ondone(name, text, translated, detected);
