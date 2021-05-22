@@ -27,6 +27,9 @@
         <div class="item"><span>URL</span>
           <input type="text" name="connection-url"/>
         </div>
+        <div class="item"><span>Channel</span>
+          <input type="text" name="connection-channel"/>
+        </div>
         <div class="item"><span>UserName</span>
           <input type="text" name="connection-username"/>
         </div>
@@ -37,6 +40,11 @@
       </div>
       <div name="format">
         <h3>Comment format settings</h3>
+      <div class="item">
+        <label>
+          <input type="checkbox" name="mute-join-leave-use-it" /><span>Mute Join / Leave</span>
+        </label>
+      </div>
         <div class="item"><span>Join</span>
           <input type="text" name="join-format"/>
         </div>
@@ -69,7 +77,7 @@
       <h3>Speech voice settings</h3>
       <div class="item">
         <label>
-          <input type="checkbox" name="multiple-speacker-use-it" /><span>Use multiple speacker</span>
+          <input type="checkbox" name="multiple-speacker-use-it" /><span>Use multiple speacker (experimental)</span>
         </label>
       </div>
       <div><span>Voice</span>
@@ -95,7 +103,7 @@
     </div>
 
     <div class="fotter flex-container">
-      <div>v1.1.1</div>
+      <div>v1.1.2</div>
       <div><a target="_blank" href="https://github.com/weizlogy/racler">Github</div>
       <div><a target="_blank" href="https://twitter.com/twilightalpaca">Twitter</div>
     </div>

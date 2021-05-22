@@ -9,10 +9,10 @@ class Commentator {
    * @param {string} username IRC接続用ユーザー名
    * @param {string} password IRC接続用パスワード
    */
-  constructor(url, username, password) {
+  constructor(url, username, password, channel) {
     const self = this;
     if (url.indexOf('twitch') != -1) {
-      self.#worker = new TwitchCommentator(url, username, password);
+      self.#worker = new TwitchCommentator(url, username, password, channel);
       self.#worker.onjoin = (name) => { self.onjoin(name); };
       self.#worker.onleave = (name) => { self.onleave(name); };
       self.#worker.oncomment = (name, comment) => { self.oncomment(name, comment); };

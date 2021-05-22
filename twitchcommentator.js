@@ -6,6 +6,8 @@ class TwitchCommentator {
   #username;
   /** @type string */
   #password;
+  /** @type string */
+  #channel;
 
   /** @type WebSocket */
   #socket;
@@ -16,11 +18,12 @@ class TwitchCommentator {
    * @param {string} username NICK.
    * @param {string} password PASS.
    */
-  constructor(url, username, password) {
+  constructor(url, username, password, channel) {
     const self = this;
     self.#url = url;
     self.#username = username;
     self.#password = password;
+    self.#channel = channel;
   };
 
   onjoin = (name) => {  };
@@ -43,7 +46,7 @@ class TwitchCommentator {
       self.#socket.send('CAP REQ twitch.tv/membership');
       self.#socket.send(`PASS ${self.#password}`);
       self.#socket.send(`NICK ${self.#username}`);
-      self.#socket.send(`JOIN #${self.#username}`);
+      self.#socket.send(`JOIN #${self.#channel}`);
     });
     
     // 打ち返し

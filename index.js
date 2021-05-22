@@ -4,6 +4,8 @@ var beforeName = '';
 
 var logins = {};
 
+var speakingTimerId;
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('loaded.');
 
@@ -28,11 +30,19 @@ window.addEventListener('DOMContentLoaded', function() {
       let store = (element.type == 'password') ? sessionStorage : localStorage;
       const storageItem = store.getItem(element.name);
       if (storageItem) {
-        element.value = storageItem;
+        if (element.type == 'checkbox' && storageItem) {
+          element.checked = storageItem.toLowerCase() === 'true';
+        } else {
+          element.value = storageItem;
+        }
       }
       element.onchange = function(event) {
         ((element.type == 'password') ? sessionStorage : localStorage).setItem(
           event.target.name, event.target.value);
+        if (element.type == 'checkbox') {
+          localStorage.setItem(event.target.name, event.target.checked);
+          return;
+        }
       }
     });
   };
@@ -46,16 +56,19 @@ window.addEventListener('DOMContentLoaded', function() {
     status.classList.remove('status-ng');
     // 接続情報取得
     const url = document.querySelector('input[name="connection-url"]').value;
+    const channel = document.querySelector('input[name="connection-channel"]').value;
     const username = document.querySelector('input[name="connection-username"]').value;
     const password = document.querySelector('input[name="connection-password"]').value;
 
-    let commentator = new Commentator(url, username, password);
+    let commentator = new Commentator(url, username, password, channel);
 
     commentator.onjoin = (name) => {
       const format = document.querySelector('input[name="join-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
-      AlpataSpeaks(text, false);
+      if (!document.querySelector('input[name="mute-join-leave-use-it"]').checked) {
+        AlpataSpeaks(text, false);
+      }
       logins[name] = logins[name] || { status: '', comment: 0 };
       logins[name].status = 'join';
       updateLoginView();
@@ -64,7 +77,9 @@ window.addEventListener('DOMContentLoaded', function() {
       const format = document.querySelector('input[name="leave-format"]').value || '';
       const text = format.replace('${name}', name);
       CreateCommentView(text);
-      AlpataSpeaks(text, false);
+      if (!document.querySelector('input[name="mute-join-leave-use-it"]').checked) {
+        AlpataSpeaks(text, false);
+      }
       logins[name].status = 'leave';
       updateLoginView();
     };
@@ -81,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function() {
           AlpacaTranslate(name, comment);
         }
       }
-      CheckCommand(name, comment, username, commentator);
+      CheckCommand(name, comment, channel, commentator);
       logins[name].comment += 1;
     };
     commentator.onerror = (error) => {
@@ -92,7 +107,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // 翻訳処理のイベントハンドラー
     translate.ondone = (name, text, translated, detected) => {
-      CreateCommentView(`${name} => (${detected}) ${translated}`);
+      if (detected) {
+        CreateCommentView(`${name} => (${detected}) ${translated}`);
+      }
       if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
         AlpataSpeaks(text, false, detected);
       }
@@ -155,6 +172,14 @@ function AlpataSpeaks(text, isPriorize, detected) {
   };
 
   speechSynthesis.speak(utter);
+
+  // たまに音声合成が止まったりするのを解除する
+  if (speakingTimerId) {
+    clearTimeout(speakingTimerId);
+  }
+  speakingTimerId = setTimeout(() => {
+    speechSynthesis.cancel();
+  }, 30000);
 }
 
 function AlpacaTranslate(name, text) {
