@@ -9,6 +9,7 @@
     <script src="translate.js"></script>
     <script src="commentator.js"></script>
     <script src="twitchcommentator.js"></script>
+    <script src="nickname.js"></script>
     <script src="index.js"></script>
   </head>
 
@@ -40,11 +41,11 @@
       </div>
       <div name="format">
         <h3>Comment format settings</h3>
-      <div class="item">
-        <label>
-          <input type="checkbox" name="mute-join-leave-use-it" /><span>Mute Join / Leave</span>
-        </label>
-      </div>
+        <div class="item">
+          <label>
+            <input type="checkbox" name="mute-join-leave-use-it" /><span>Mute Join / Leave</span>
+          </label>
+        </div>
         <div class="item"><span>Join</span>
           <input type="text" name="join-format"/>
         </div>
@@ -69,7 +70,11 @@
     <div class="flex-container" name="keyword-action">
       <div name="comment-keyword">
         <h3>Comment Keyword settings</h3>
-        <textarea style="width: 100%; height: 100px;"></textarea>
+        <textarea name="ta-comment-keyword" style="width: 100%; height: 100px;"></textarea>
+      </div>
+      <div name="comment-nickname">
+        <h3>Comment NickName settings</h3>
+        <textarea name="ta-comment-nickname" style="width: 100%; height: 100px;"></textarea>
       </div>
     </div>
 
@@ -103,7 +108,7 @@
     </div>
 
     <div class="fotter flex-container">
-      <div>v1.1.2</div>
+      <div>v1.1.3</div>
       <div><a target="_blank" href="https://github.com/weizlogy/racler">Github</div>
       <div><a target="_blank" href="https://twitter.com/twilightalpaca">Twitter</div>
     </div>

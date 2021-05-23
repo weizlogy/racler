@@ -25,14 +25,14 @@ class RTAWTranslate {
       const detected = data["detected"].toLowerCase();
       // 翻訳前後が同じなら翻訳結果を無視する
       if (detected == target) {
-        self.ondone(name, text, text, target);
+        self.ondone(name, text, text);
         return;
       }
       self.ondone(name, text, translated, detected);
     })
-    .fail(function(data) {
-      console.log('translate-fail', data);
-      self.onerror(name, data);
+    .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+      console.log('translate-fail', XMLHttpRequest.status, textStatus, errorThrown);
+      self.onerror(name, text, `${textStatus}. ${errorThrown}.`);
     });
   };
 

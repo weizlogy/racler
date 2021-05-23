@@ -35,6 +35,12 @@ Read Aloud Comments from Livestreaming sitEs in Real time.
 
 # Comment format settings
 
+## Mute Join / Leave
+
+チェックすると、ライブ配信のチャンネルに入場 / 退出したユーザーの読み上げをミュートする。
+
+デフォルト：ミュートしない
+
 ## Join
 
 ライブ配信のチャンネルに入場したユーザーの表示用フォーマット。
@@ -115,7 +121,23 @@ ex) !!test: request http:~~~?${arg}
 - request
 <Process>にURLを指定し、結果をチャット欄に打ち返す。
 
+# Comment NickName settings
+
+ユーザーのニックネームを設定し、ニックネームでコメントを読み上げるようにする。
+現時点では、Join / Leaveは対象外。
+
+一行で一設定、複数行記載できる。
+
+- 形式
+ユーザー名: ニックネーム
+
 # Speech voice settings
+
+## Use multiple speacker (experimental)
+
+チェックすると、翻訳前のコメントも読み上げる。
+
+デフォルト：読み上げない
 
 ## Voice
 

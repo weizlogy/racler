@@ -1,4 +1,5 @@
 var translate = new RTAWTranslate();
+var nickname = new RTAWNickName();
 
 var beforeName = '';
 
@@ -84,44 +85,48 @@ window.addEventListener('DOMContentLoaded', function() {
       updateLoginView();
     };
     commentator.oncomment = (name, comment) => {
-      const format = document.querySelector('input[name="comment-format"]').value || '';
-      let text = format.replace('${name}', name).replace('${comment}', comment);
-      if (beforeName == name) {
-        text = comment;
-      }
-      beforeName = name;
-      CreateCommentView(text);
       if (!comment.startsWith('!!')) {
         if (username != name) {
           AlpacaTranslate(name, comment);
         }
+      } else {
+        CreateCommentView(text);
       }
       CheckCommand(name, comment, channel, commentator);
+      logins[name] = logins[name] || { status: '', comment: 0 };
       logins[name].comment += 1;
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
     };
 
+    //** コメント監視開始 */
     commentator.start();
 
     // 翻訳処理のイベントハンドラー
-    translate.ondone = (name, text, translated, detected) => {
+    translate.ondone = (name, comment, translated, detected) => {
+      let text;
+
       if (detected) {
-        CreateCommentView(`${name} => (${detected}) ${translated}`);
+        text = commentFormatter(name, translated);
+        CreateCommentView(`(${detected}) ${comment} => ${text}`);
+
+        if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
+          AlpataSpeaks(text, false, detected);
+        }
+      } else {
+        text = commentFormatter(name, comment);
+        CreateCommentView(text);
       }
-      if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
-        AlpataSpeaks(text, false, detected);
-      }
-      if (translated) {
-        AlpataSpeaks(translated, true);
-      }
-    };
-    translate.onerror = (name, text, error) => {
-      CreateCommentView(`${name} => ${error}`);
       AlpataSpeaks(text, true);
     };
+    translate.onerror = (name, comment, error) => {
+      CreateCommentView(`${name} | ${comment} => ${error}`);
+      AlpataSpeaks(error, true);
+    };
 
+    // ニックネーム読み込み
+    nickname.load(document.querySelector('textarea[name="ta-comment-nickname"]').value);
   }
 
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
@@ -200,7 +205,7 @@ function CreateCommentView(text) {
 function CheckCommand(name, comment, channel, commentator) {
   // textareaをJSON化
   const keywords =
-    JSON.parse('{' + document.querySelector('textarea').value.split('\n')
+    JSON.parse('{' + document.querySelector('textarea[name="ta-comment-keyword"]').value.split('\n')
       .map(v => { return v.replace(/^(.+?): (.+?)$/, '"$1": "$2"') }).join(',') + '}');
 
   // 特殊コメント対応
@@ -266,4 +271,22 @@ function updateLoginView() {
     login.innerHTML = `<span class="${logins[value].status}">●</span><span> ${value} </span><span> - ${logins[value].comment}</span>`;
     view.appendChild(login);
   });
+}
+
+function commentFormatter(name, comment) {
+  const format = document.querySelector('input[name="comment-format"]').value || '';
+  let text =
+    format.replace('${name}', nickname.toNickIfExists(name))
+      .replace('${comment}', comment);
+
+  //console.log('1)', beforeName, text);
+
+  if (beforeName == name) {
+    text = comment;
+  }
+  beforeName = name;
+
+  //console.log('2)', beforeName, text);
+
+  return text;
 }
