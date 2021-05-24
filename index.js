@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     translate.onerror = (name, comment, error) => {
       CreateCommentView(`${name} | ${comment} => ${error}`);
-      AlpataSpeaks(error, true);
+      AlpataSpeaks(`${comment}. ${error}`, true);
     };
 
     // ニックネーム読み込み
@@ -189,10 +189,11 @@ function AlpataSpeaks(text, isPriorize, detected) {
 
 function AlpacaTranslate(name, text) {
   // 翻訳情報取得
-  const apikey = document.querySelector('input[name="gas-deploy-key"]').value || 'AKfycbx76Gd_ytJJxInNVqVMUhEXpzEL1zsZpb_vRw-Z7S3ZR6n-5dM'
-  const target = document.querySelector('input[name="gas-target"]').value || 'ja'
+  const apikey = document.querySelector('input[name="gas-deploy-key"]').value || 'AKfycbx76Gd_ytJJxInNVqVMUhEXpzEL1zsZpb_vRw-Z7S3ZR6n-5dM';
+  const target = document.querySelector('input[name="gas-target"]').value || 'ja';
+  const timeout = parseInt(document.querySelector('input[name="gas-timeout"]').value, 10) || 10000;
   // 翻訳元を指定しない場合は自動判定するということなので
-  translate.exec(text, apikey, '', target, name);
+  translate.exec(text, apikey, '', target, name, timeout);
 }
 
 function CreateCommentView(text) {

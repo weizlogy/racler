@@ -5,7 +5,7 @@ class RTAWTranslate {
 
   constructor() { };
 
-  exec = (text, apikey, source, target, name) => {
+  exec = (text, apikey, source, target, name, timeout) => {
     const self = this;
 
     if (text === "") {
@@ -18,7 +18,7 @@ class RTAWTranslate {
       url: `https://script.google.com/macros/s/${apikey}/exec?text=${(text)}&source=${source}&target=${target}`,
       dataType: "jsonp",
       jsonpCallback: "test",
-      timeout: 10000
+      timeout: timeout
     }).done(function(data) {
       console.log('translate-done', data);
       const translated = data["translated"];

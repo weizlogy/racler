@@ -90,6 +90,12 @@ function doGet(e) {
 
 デフォルト：ja
 
+## Timeout
+
+翻訳タイムアウトを設定する。（ミリ秒）
+
+デフォルト：10000
+
 # Comment Keyword settings
 
 キーワードに反応して自動応答する設定を入力する。
