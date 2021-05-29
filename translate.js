@@ -11,13 +11,18 @@ class RTAWTranslate {
     if (text === "") {
       return;
     }
+
+    // コールバック動的対応
+    const fname = 'test' + Date.now();
+    window[fname] = () => {};
+
     // 翻訳する
     console.log(
       `https://script.google.com/macros/s/${apikey}/exec?text=${(text)}&source=${source}&target=${target}`)
     $.ajax({
       url: `https://script.google.com/macros/s/${apikey}/exec?text=${(text)}&source=${source}&target=${target}`,
       dataType: "jsonp",
-      jsonpCallback: "test",
+      jsonpCallback: fname,
       timeout: timeout
     }).done(function(data) {
       console.log('translate-done', data);
@@ -33,10 +38,10 @@ class RTAWTranslate {
     .fail(function(XMLHttpRequest, textStatus, errorThrown) {
       console.log('translate-fail', XMLHttpRequest.status, textStatus, errorThrown);
       self.onerror(name, text, `${textStatus}. ${errorThrown}.`);
+    })
+    .always(() => {
+      window[fname] = null;
     });
   };
 
 };
-
-/** JSONP用のダミーコールバック. */
-function test() { }
