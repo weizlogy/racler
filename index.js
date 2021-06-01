@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', function() {
           AlpacaTranslate(name, comment);
         }
       } else {
-        CreateCommentView(text);
+        CreateCommentView(comment);
       }
       CheckCommand(name, comment, channel, commentator);
       logins[name] = logins[name] || { status: '', comment: 0 };
