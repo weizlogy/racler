@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     translate.onerror = (name, comment, error) => {
       CreateCommentView(`${name} | ${comment} => ${error}`);
-      AlpataSpeaks(`${comment}. ${error}`, true);
+      AlpataSpeaks(`${comment}`, true);
     };
 
     // ニックネーム読み込み
