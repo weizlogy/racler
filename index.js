@@ -236,7 +236,10 @@ function CheckCommand(name, comment, channel, commentator) {
           }
           return res.text()
         })
-        .then(text => commentator.sendmsg(name, channel, text))
+        .then(text => {
+          commentator.sendmsg(name, channel, text);
+          AlpataSpeaks(text);
+        });
         break;
     }
     return;
