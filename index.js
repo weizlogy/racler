@@ -127,6 +127,13 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // ニックネーム読み込み
     nickname.load(document.querySelector('textarea[name="ta-comment-nickname"]').value);
+
+    // LoginViewの調整
+    let display = 'inherit';
+    if (document.querySelector(`input[name="mute-join-mute-loginview"]`).checked) {
+      display = 'none';
+    }
+    document.querySelector('div[name="login"]').style = 'display: ' + display;
   }
 
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
