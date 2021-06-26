@@ -1,6 +1,8 @@
 var translate = new RTAWTranslate();
 var nickname = new RTAWNickName();
 
+var talkingWorker = new Worker('worker/talking.js');
+
 var beforeName = '';
 
 var logins = {};
@@ -95,6 +97,7 @@ window.addEventListener('DOMContentLoaded', function() {
       CheckCommand(name, comment, channel, commentator);
       logins[name] = logins[name] || { status: '', comment: 0 };
       logins[name].comment += 1;
+      talkingWorker.postMessage({ command: 'reset' });
     };
     commentator.onerror = (error) => {
       CreateCommentView(error);
@@ -134,10 +137,28 @@ window.addEventListener('DOMContentLoaded', function() {
       display = 'none';
     }
     document.querySelector('div[name="login"]').style = 'display: ' + display;
+
+    // Workerの読み込み
+    talkingWorker.onmessage = () => {
+      const target = document.querySelector('input[name="auto-command-target"]').value;
+      CheckCommand(channel, target, channel, commentator);
+    };
+    if (document.querySelector('input[name="auto-command-use-it"]').checked) {
+      talkingWorker.postMessage({
+        command: 'start',
+        timer: parseInt(
+          document.querySelector('input[name="auto-command-timer"]').value, 10)
+      });
+    }
+
   }
 
+  // test codes
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
     AlpataSpeaks("吾輩はアルパカである。名前はまだない。", false);
+  }
+  document.querySelector('div[name="auto-command-submit"]').onclick = function() {
+    talkingWorker.postMessage({ command: 'test' });
   }
 
 });
