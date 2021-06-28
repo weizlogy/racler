@@ -87,13 +87,7 @@ window.addEventListener('DOMContentLoaded', function() {
       updateLoginView();
     };
     commentator.oncomment = (name, comment) => {
-      if (!comment.startsWith('!!')) {
-        if (username != name) {
-          AlpacaTranslate(name, comment);
-        }
-      } else {
-        CreateCommentView(comment);
-      }
+      DispatchComment(username, name, comment);
       CheckCommand(name, comment, channel, commentator);
       logins[name] = logins[name] || { status: '', comment: 0 };
       logins[name].comment += 1;
@@ -141,7 +135,7 @@ window.addEventListener('DOMContentLoaded', function() {
     // Workerの読み込み
     talkingWorker.onmessage = () => {
       const target = document.querySelector('input[name="auto-command-target"]').value;
-      CheckCommand(channel, target, channel, commentator);
+      CheckCommand('', target, channel, commentator);
     };
     if (document.querySelector('input[name="auto-command-use-it"]').checked) {
       talkingWorker.postMessage({
@@ -321,4 +315,20 @@ function commentFormatter(name, comment) {
   //console.log('2)', beforeName, text);
 
   return text;
+}
+
+function DispatchComment(username, name, comment) {
+  if (comment.startsWith('!!')) {
+    CreateCommentView(comment);
+    return;
+  }
+  if (username == name) {
+    return;
+  }
+  if (document.querySelector('input[name="mute-atmark-target-use-it"]').checked) {
+    if (comment.indexOf('@') != -1) {
+      return;
+    }
+  }
+  AlpacaTranslate(name, comment);
 }

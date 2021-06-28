@@ -96,7 +96,10 @@ class TwitchCommentator {
       console.log('socket closed.');
       return;
     }
-    const text = `PRIVMSG #${channel} :@${name} ${msg}`;
+    let text = `PRIVMSG #${channel} :@${name} ${msg}`;
+    if (!name) {
+      text = `PRIVMSG #${channel} : ${msg}`;
+    }
     console.log(text);
     self.#socket.send(text);
   };

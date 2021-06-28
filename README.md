@@ -35,9 +35,9 @@ Read Aloud Comments from Livestreaming sitEs in Real time.
 
 # Comment format settings
 
-## Mute Join / Leave
+## Mute LoginView
 
-チェックすると、ライブ配信のチャンネルに入場 / 退出したユーザーの読み上げをミュートする。
+チェックすると、ライブ配信のチャンネルに入場 / 退出したユーザー状態を表示しない。
 
 デフォルト：ミュートしない
 
@@ -144,6 +144,18 @@ ex) !!test: request http:~~~?${arg}
 チェックすると、翻訳前のコメントも読み上げる。
 
 デフォルト：読み上げない
+
+## Mute Join / Leave
+
+チェックすると、ライブ配信のチャンネルに入場 / 退出したユーザーの読み上げをミュートする。
+
+デフォルト：ミュートしない
+
+## Mute @ target
+
+チェックすると、@を含むコメントの読み上げをミュートする。
+
+デフォルト：ミュートしない
 
 ## Voice
 
