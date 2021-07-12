@@ -5,7 +5,7 @@ class RTAWTranslate {
 
   constructor() { };
 
-  exec = (text, apikey, source, target, name, timeout) => {
+  exec = (text, apikey, source, target, name, timeout, isSub) => {
     const self = this;
 
     if (text === "") {
@@ -28,6 +28,11 @@ class RTAWTranslate {
       console.log('translate-done', data);
       const translated = data["translated"];
       const detected = data["detected"].toLowerCase();
+      // サブターゲット翻訳
+      if (isSub) {
+        self.onsubdone(name, text, translated, detected);
+        return;
+      }
       // 翻訳前後が同じなら翻訳結果を無視する
       if (detected == target) {
         self.ondone(name, text, text);

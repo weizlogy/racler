@@ -112,11 +112,22 @@ window.addEventListener('DOMContentLoaded', function() {
           AlpataSpeaks(text, false, detected);
         }
       } else {
+        // 言語検出なしの場合はサブターゲットで再翻訳
+        const subTarget = document.querySelector('input[name="gas-target-sub"]').value || '';
+        if (subTarget) {
+          AlpacaTranslate(name, comment, subTarget, true);
+        }
         text = commentFormatter(name, comment);
         CreateCommentView(text);
       }
       AlpataSpeaks(text, true);
     };
+
+    translate.onsubdone = (name, comment, translated, detected) => {
+      let text = commentFormatter(name, translated);
+      commentator.sendmsg('', channel, translated);
+    };
+
     translate.onerror = (name, comment, error) => {
       CreateCommentView(`${name} | ${comment} => ${error}`);
       AlpataSpeaks(`${comment}`, true);
@@ -209,13 +220,12 @@ function AlpataSpeaks(text, isPriorize, detected) {
   }, 30000);
 }
 
-function AlpacaTranslate(name, text) {
+function AlpacaTranslate(name, text, target, isSub) {
   // 翻訳情報取得
   const apikey = document.querySelector('input[name="gas-deploy-key"]').value || 'AKfycbx76Gd_ytJJxInNVqVMUhEXpzEL1zsZpb_vRw-Z7S3ZR6n-5dM';
-  const target = document.querySelector('input[name="gas-target"]').value || 'ja';
   const timeout = parseInt(document.querySelector('input[name="gas-timeout"]').value, 10) || 10000;
   // 翻訳元を指定しない場合は自動判定するということなので
-  translate.exec(text, apikey, '', target, name, timeout);
+  translate.exec(text, apikey, '', target, name, timeout, isSub);
 }
 
 function CreateCommentView(text) {
@@ -330,5 +340,6 @@ function DispatchComment(username, name, comment) {
       return;
     }
   }
-  AlpacaTranslate(name, comment);
+  const target = document.querySelector('input[name="gas-target"]').value || 'ja';
+  AlpacaTranslate(name, comment, target);
 }
