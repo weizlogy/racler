@@ -42,7 +42,10 @@ class RTAWTranslate {
     })
     .fail(function(XMLHttpRequest, textStatus, errorThrown) {
       console.log('translate-fail', XMLHttpRequest.status, textStatus, errorThrown);
-      self.onerror(name, text, `${textStatus}. ${errorThrown}.`);
+      // サブターゲット翻訳で失敗してもエラー処理しないでいいです
+      if (!isSub) {
+        self.onerror(name, text, `${textStatus}. ${errorThrown}.`);
+      }
     })
     .always(() => {
       window[fname] = null;
