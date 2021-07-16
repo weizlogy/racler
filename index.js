@@ -340,6 +340,16 @@ function DispatchComment(username, name, comment) {
       return;
     }
   }
+  if (document.querySelector('input[name="speak-cherokee-use-it"]').checked) {
+    if (comment.indexOf('Ꭰ')
+        || comment.indexOf('Ꭱ')
+        || comment.indexOf('Ꭲ')
+        || comment.indexOf('Ꭳ')
+        || comment.indexOf('Ꭴ')) {
+      comment = Array.from(comment).map(v => Cherokee[v] || v).join('');
+      console.log('Cherokee-ed', comment);
+    }
+  }
   const target = document.querySelector('input[name="gas-target"]').value || 'ja';
   AlpacaTranslate(name, comment, target);
 }
