@@ -193,6 +193,18 @@ function AlpataSpeaks(text, isPriorize, detected) {
     }
   }
 
+  // Cherokee convert
+  if (document.querySelector('input[name="speak-cherokee-use-it"]').checked) {
+    if (text.indexOf('Ꭰ')
+        || text.indexOf('Ꭱ')
+        || text.indexOf('Ꭲ')
+        || text.indexOf('Ꭳ')
+        || text.indexOf('Ꭴ')) {
+      text = Array.from(text).map(v => Cherokee[v] || v).join('');
+      console.log('Cherokee-ed', text);
+    }
+  }
+
   const utter = new SpeechSynthesisUtterance(text);
   utter.volume = document.querySelector(`input[name="voice-target-volume"]`).value
   utter.pitch = document.querySelector(`input[name="voice-target-pitch"]`).value
@@ -338,16 +350,6 @@ function DispatchComment(username, name, comment) {
   if (document.querySelector('input[name="mute-atmark-target-use-it"]').checked) {
     if (comment.indexOf('@') != -1) {
       return;
-    }
-  }
-  if (document.querySelector('input[name="speak-cherokee-use-it"]').checked) {
-    if (comment.indexOf('Ꭰ')
-        || comment.indexOf('Ꭱ')
-        || comment.indexOf('Ꭲ')
-        || comment.indexOf('Ꭳ')
-        || comment.indexOf('Ꭴ')) {
-      comment = Array.from(comment).map(v => Cherokee[v] || v).join('');
-      console.log('Cherokee-ed', comment);
     }
   }
   const target = document.querySelector('input[name="gas-target"]').value || 'ja';
