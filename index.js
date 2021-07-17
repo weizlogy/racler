@@ -195,11 +195,11 @@ function AlpataSpeaks(text, isPriorize, detected) {
 
   // Cherokee convert
   if (document.querySelector('input[name="speak-cherokee-use-it"]').checked) {
-    if (text.indexOf('Ꭰ')
-        || text.indexOf('Ꭱ')
-        || text.indexOf('Ꭲ')
-        || text.indexOf('Ꭳ')
-        || text.indexOf('Ꭴ')) {
+    if (text.indexOf('Ꭰ') != -1
+        || text.indexOf('Ꭱ') != -1
+        || text.indexOf('Ꭲ') != -1
+        || text.indexOf('Ꭳ') != -1
+        || text.indexOf('Ꭴ') != -1) {
       text = Array.from(text).map(v => Cherokee[v] || v).join('');
       console.log('Cherokee-ed', text);
     }
