@@ -1,5 +1,6 @@
 var translate = new RTAWTranslate();
 var nickname = new RTAWNickName();
+var nameRelatedVoice = new RTAWNameRelatedVoice();
 
 var talkingWorker = new Worker('worker/talking.js');
 
@@ -27,6 +28,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     createVoiceList('select[name="voice-target"]');
+    createVoiceList('select[name="voice-target-names"]');
 
     // 設定情報の保存と復元
     document.querySelectorAll('input, select, textarea').forEach((element) => {
@@ -70,7 +72,7 @@ window.addEventListener('DOMContentLoaded', function() {
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       if (!document.querySelector('input[name="mute-join-leave-use-it"]').checked) {
-        AlpataSpeaks(text, false);
+        AlpataSpeaks(text, username, false);
       }
       logins[name] = logins[name] || { status: '', comment: 0 };
       logins[name].status = 'join';
@@ -81,7 +83,7 @@ window.addEventListener('DOMContentLoaded', function() {
       const text = format.replace('${name}', name);
       CreateCommentView(text);
       if (!document.querySelector('input[name="mute-join-leave-use-it"]').checked) {
-        AlpataSpeaks(text, false);
+        AlpataSpeaks(text, username, false);
       }
       logins[name].status = 'leave';
       updateLoginView();
@@ -109,7 +111,7 @@ window.addEventListener('DOMContentLoaded', function() {
         CreateCommentView(`(${detected}) ${comment} => ${text}`);
 
         if (document.querySelector(`input[name="multiple-speacker-use-it"]`).checked) {
-          AlpataSpeaks(text, false, detected);
+          AlpataSpeaks(text, name, false, detected);
         }
       } else {
         // 言語検出なしの場合はサブターゲットで再翻訳
@@ -120,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function() {
         text = commentFormatter(name, comment);
         CreateCommentView(text);
       }
-      AlpataSpeaks(text, true);
+      AlpataSpeaks(text, name, true);
     };
 
     translate.onsubdone = (name, comment, translated, detected) => {
@@ -130,11 +132,13 @@ window.addEventListener('DOMContentLoaded', function() {
 
     translate.onerror = (name, comment, error) => {
       CreateCommentView(`${name} | ${comment} => ${error}`);
-      AlpataSpeaks(`${comment}`, true);
+      AlpataSpeaks(`${comment}`, name, true);
     };
 
     // ニックネーム読み込み
     nickname.load(document.querySelector('textarea[name="ta-comment-nickname"]').value);
+    // 名前に依存した音声ターゲットの読み込み
+    nameRelatedVoice.load(document.querySelector('textarea[name="ta-names-voice"]').value);
 
     // LoginViewの調整
     let display = 'inherit';
@@ -160,7 +164,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // test codes
   document.querySelector('div[name="speech-speaker-submit"]').onclick = function() {
-    AlpataSpeaks("吾輩はアルパカである。名前はまだない。", false);
+    AlpataSpeaks("吾輩はアルパカである。名前はまだない。", 'test1', false);
+  }
+  document.querySelector('div[name="speech-speaker-names-submit"]').onclick = function() {
+    AlpataSpeaks("吾輩はアルパカである。名前はまだない。", 'test2', false);
   }
   document.querySelector('div[name="auto-command-submit"]').onclick = function() {
     talkingWorker.postMessage({ command: 'test' });
@@ -173,13 +180,18 @@ window.addEventListener('DOMContentLoaded', function() {
  * @param {string} text speakする文字列
  * @param {boolean} isPriorize 優先するか？(true: する / false: しない)
  */
-function AlpataSpeaks(text, isPriorize, detected) {
+function AlpataSpeaks(text, name, isPriorize, detected) {
   if (isPriorize) {
     // 一時的にキャンセル
     // speechSynthesis.cancel();
   }
 
-  const selectbox = document.querySelector(`select[name="voice-target"]`)
+  let target = 'voice-target';
+  if (nameRelatedVoice.exists(name)) {
+    target = 'voice-target-names';
+  }
+
+  const selectbox = document.querySelector(`select[name="${target}"]`)
 
   // 言語に応じて音声選択
   let voice = speechSynthesis.getVoices()[selectbox.selectedIndex];
@@ -206,9 +218,9 @@ function AlpataSpeaks(text, isPriorize, detected) {
   }
 
   const utter = new SpeechSynthesisUtterance(text);
-  utter.volume = document.querySelector(`input[name="voice-target-volume"]`).value
-  utter.pitch = document.querySelector(`input[name="voice-target-pitch"]`).value
-  utter.rate = document.querySelector(`input[name="voice-target-rate"]`).value
+  utter.volume = document.querySelector(`input[name="${target}-volume"]`).value
+  utter.pitch = document.querySelector(`input[name="${target}-pitch"]`).value
+  utter.rate = document.querySelector(`input[name="${target}-rate"]`).value
   utter.voice = voice;
   utter.lang = voice.lang;
 
@@ -282,7 +294,7 @@ function CheckCommand(name, comment, channel, commentator) {
         })
         .then(text => {
           commentator.sendmsg(name, channel, text);
-          AlpataSpeaks(text);
+          AlpataSpeaks(text, name);
         });
         break;
     }
@@ -294,7 +306,7 @@ function CheckCommand(name, comment, channel, commentator) {
     if (comment.indexOf(key) == -1) {
       return;
     }
-    AlpataSpeaks(keywords[key], false);
+    AlpataSpeaks(keywords[key], name, false);
   });
 }
 

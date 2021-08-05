@@ -10,6 +10,7 @@
     <script src="commentator.js"></script>
     <script src="twitchcommentator.js"></script>
     <script src="nickname.js"></script>
+    <script src="namerelatedvoice.js"></script>
     <script src="languagemapper.js"></script>
     <script src="index.js"></script>
   </head>
@@ -85,41 +86,64 @@
       </div>
     </div>
 
-    <div name="speech-speaker">
-      <h3>Speech voice settings</h3>
-      <div class="item">
-        <label>
-          <input type="checkbox" name="multiple-speacker-use-it" /><span>Use multiple speacker (experimental)</span>
-        </label>
+    <div class="flex-container" name="speech-speaker">
+      <div>
+        <h3>Speech voice settings</h3>
+        <div class="item">
+          <label>
+            <input type="checkbox" name="multiple-speacker-use-it" /><span>Use multiple speacker (experimental)</span>
+          </label>
+        </div>
+        <div class="item">
+          <label>
+            <input type="checkbox" name="mute-join-leave-use-it" /><span>Mute Join / Leave</span>
+          </label>
+        </div>
+        <div class="item">
+          <label>
+            <input type="checkbox" name="mute-atmark-target-use-it" /><span>Mute @ target</span>
+          </label>
+        </div>
+        <div class="item">
+          <label>
+            <input type="checkbox" name="speak-cherokee-use-it" /><span>Use speak Cherokee</span>
+          </label>
+        </div>
+
+        <div><span>Voice</span>
+          <select name="voice-target"></select>
+        </div>
+        <div><span>Volume</span>
+          <input type="range" name="voice-target-volume" min="0" max="1" step="0.1" value="1.0">
+        </div>
+        <div style="margin-left: 23px;"><span>Pitch</span>
+          <input type="range" name="voice-target-pitch" min="0.1" max="10" step="0.1" value="1.0">
+        </div>
+        <div style="margin-left: 24px;"><span>Rate</span>
+          <input type="range" name="voice-target-rate" min="0" max="2" step="0.1" value="1.0">
+        </div>
+        <div class="button" name="speech-speaker-submit">Test</div>
       </div>
-      <div class="item">
-        <label>
-          <input type="checkbox" name="mute-join-leave-use-it" /><span>Mute Join / Leave</span>
-        </label>
+
+      <div>
+        <div name="names-voice">
+          <h3>Name related voice settings</h3>
+          <textarea name="ta-names-voice" style="width: 100%; height: 100px;"></textarea>
+        </div>
+        <div><span>Voice</span>
+          <select name="voice-target-names"></select>
+        </div>
+        <div><span>Volume</span>
+          <input type="range" name="voice-target-names-volume" min="0" max="1" step="0.1" value="1.0">
+        </div>
+        <div style="margin-left: 23px;"><span>Pitch</span>
+          <input type="range" name="voice-target-names-pitch" min="0.1" max="10" step="0.1" value="1.0">
+        </div>
+        <div style="margin-left: 24px;"><span>Rate</span>
+          <input type="range" name="voice-target-names-rate" min="0" max="2" step="0.1" value="1.0">
+        </div>
+        <div class="button" name="speech-speaker-names-submit">Test</div>
       </div>
-      <div class="item">
-        <label>
-          <input type="checkbox" name="mute-atmark-target-use-it" /><span>Mute @ target</span>
-        </label>
-      </div>
-      <div class="item">
-        <label>
-          <input type="checkbox" name="speak-cherokee-use-it" /><span>Use speak Cherokee</span>
-        </label>
-      </div>
-      <div><span>Voice</span>
-        <select name="voice-target"></select>
-      </div>
-      <div><span>Volume</span>
-        <input type="range" name="voice-target-volume" min="0" max="1" step="0.1" value="1.0">
-      </div>
-      <div style="margin-left: 23px;"><span>Pitch</span>
-        <input type="range" name="voice-target-pitch" min="0.1" max="10" step="0.1" value="1.0">
-      </div>
-      <div style="margin-left: 24px;"><span>Rate</span>
-        <input type="range" name="voice-target-rate" min="0" max="2" step="0.1" value="1.0">
-      </div>
-      <div class="button" name="speech-speaker-submit">Test</div>
     </div>
 
     <div name="auto-command">
