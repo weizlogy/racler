@@ -1,6 +1,6 @@
 class RTAWNameRelatedVoice {
 
-  #names;
+  #names = [];
 
   constructor() { };
 
