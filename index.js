@@ -115,11 +115,11 @@ window.addEventListener('DOMContentLoaded', function() {
         // }
 
         // Nativeは翻訳前に読んでいるので読まなくていい
-        if (detected == document.querySelector('input[name="gas-target-native"]').value || 'ja') {
+        if (detected == (document.querySelector('input[name="gas-target-native"]').value || 'ja')) {
           return;
         }
         // prefix付け
-        text = document.querySelector('input[name="gas-speak-translated-prefix"]').value || '' + text;
+        text = (document.querySelector('input[name="gas-speak-translated-prefix"]').value || '') + text;
         // 翻訳したら翻訳前に読んでいるものを消してから
         speechSynthesis.cancel();
         AlpataSpeaks(text, name, true);
@@ -361,7 +361,7 @@ function DispatchComment(username, name, comment) {
     }
   }
 
-  AlpataSpeaks(comment, name)
   const target = document.querySelector('input[name="gas-target"]').value || 'ja';
   AlpacaTranslate(name, comment, target);
+  AlpataSpeaks(comment, name);
 }
