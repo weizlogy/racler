@@ -27,7 +27,7 @@ class RTAWTranslate {
     }).done(function(data) {
       console.log('translate-done', data);
       const translated = data["translated"];
-      const detected = data["detected"].toLowerCase();
+      const detected = (data["detected"] || '').toLowerCase();
       // サブターゲット翻訳
       if (isSub) {
         self.onsubdone(name, text, translated, detected);

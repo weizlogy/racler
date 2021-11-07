@@ -5,6 +5,7 @@ var nameRelatedVoice = new RTAWNameRelatedVoice();
 var talkingWorker = new Worker('worker/talking.js');
 
 var beforeName = '';
+var rtawkey = '';
 
 var logins = {};
 
@@ -156,6 +157,7 @@ window.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    rtawkey = document.querySelector(`input[name="auto-command-rtawkey"]`).value || '';
   }
 
   // test codes
@@ -263,7 +265,10 @@ function CheckCommand(name, comment, channel, commentator) {
 
   // 特殊コメント対応
   if (comment.startsWith('!!')) {
-    const temp = new RegExp(/^!!(.+?):(.+?)$/).exec(comment);
+    let temp = new RegExp(/^!!(.+?):(.+?)$/).exec(comment);
+    if (!temp) {
+      temp = [ comment, comment.replace('!!', ''), '' ];
+    }
     const cmd = temp[1];
     const arg = temp[2];
     console.log(cmd, arg);
@@ -292,6 +297,16 @@ function CheckCommand(name, comment, channel, commentator) {
           commentator.sendmsg(name, channel, text);
           AlpataSpeaks(text, name);
         });
+        break;
+
+      case 'rtawsave':
+        RTAWRelation('save');
+        commentator.sendmsg(name, channel, 'save command successful.');
+        break;
+
+      case 'rtawreplay':
+        RTAWRelation('replay');
+        commentator.sendmsg(name, channel, 'replay command successful.');
         break;
     }
     return;
@@ -364,4 +379,31 @@ function DispatchComment(username, name, comment) {
   const target = document.querySelector('input[name="gas-target"]').value || 'ja';
   AlpacaTranslate(name, comment, target);
   AlpataSpeaks(comment, name);
+}
+
+var socket = null;
+function RTAWRelation(command) {
+  if (!rtawkey) {
+    return;
+  }
+
+  const mysender = () => {
+    const data = `{ "to": "${rtawkey}", "command": "${command}" }`;
+    socket.send(data);
+  };
+  if (!socket) {
+    socket = new WebSocket(`wss://cloud.achex.ca/rtaw${rtawkey}`);
+
+    socket.addEventListener('open', (ev) => {
+      socket.send(`{ "auth": "${rtawkey}sender" }`);
+      mysender();
+    });
+    socket.addEventListener('message', (ev) => {
+      console.log(ev.data);
+    });
+    return;
+  }
+  if (socket.readyState == 1) {
+    mysender();
+  }
 }
