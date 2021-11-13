@@ -264,17 +264,17 @@ function CheckCommand(name, comment, channel, commentator) {
       .map(v => { return v.replace(/^(.+?): (.+?)$/, '"$1": "$2"') }).join(',') + '}');
 
   // 特殊コメント対応
-  if (comment.startsWith('!!')) {
-    let temp = new RegExp(/^!!(.+?):(.+?)$/).exec(comment);
+  if (comment.startsWith('!')) {
+    let temp = new RegExp(/^!(.+?) (.+?)$/).exec(comment);
     if (!temp) {
-      temp = [ comment, comment.replace('!!', ''), '' ];
+      temp = [ comment, comment.replace('!', ''), '' ];
     }
     const cmd = temp[1];
     const arg = temp[2];
     console.log(cmd, arg);
 
     // !!chatcmd: intercmd proc
-    const spcmd = new RegExp(/^(.+?) (.+?)$/).exec(keywords['!!' + cmd]);
+    const spcmd = new RegExp(/^(.+?) (.+?)$/).exec(keywords['!' + cmd]);
     const intercmd = spcmd[1];
     const proc = spcmd[2];
     console.log(intercmd, proc);

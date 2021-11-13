@@ -116,15 +116,15 @@ function doGet(e) {
 
 ## 特殊コメント
 
-キーワードに!!を含めた以下のフォーマットを設定するとカスタムチャットコマンドを用意できる。
+キーワードに!を含めた以下のフォーマットを設定するとカスタムチャットコマンドを用意できる。
 
 ```
-!!<ChatCommand>: <InternalCommand> <Process>
+!<ChatCommand>: <InternalCommand> <Process>
 ```
 
-ex) !!test: request http:~~~?${arg}
+ex) !test: request http:~~~?${arg}
 
-で、チャット欄から !!test:xxx と呼んでもらう。xxxは${arg}と入れ替わる。
+で、チャット欄から !test xxx と呼んでもらう。xxxは${arg}と入れ替わる。
 
 ### ChatCommand
 
