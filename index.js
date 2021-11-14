@@ -11,6 +11,8 @@ var logins = {};
 
 var speakingTimerId;
 
+var COMMAND_SUFFIX = '!';
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('loaded.');
 
@@ -264,17 +266,17 @@ function CheckCommand(name, comment, channel, commentator) {
       .map(v => { return v.replace(/^(.+?): (.+?)$/, '"$1": "$2"') }).join(',') + '}');
 
   // 特殊コメント対応
-  if (comment.startsWith('!')) {
+  if (comment.startsWith(COMMAND_SUFFIX)) {
     let temp = new RegExp(/^!(.+?) (.+?)$/).exec(comment);
     if (!temp) {
-      temp = [ comment, comment.replace('!', ''), '' ];
+      temp = [ comment, comment.replace(COMMAND_SUFFIX, ''), '' ];
     }
     const cmd = temp[1];
     const arg = temp[2];
     console.log(cmd, arg);
 
-    // !!chatcmd: intercmd proc
-    const spcmd = new RegExp(/^(.+?) (.+?)$/).exec(keywords['!' + cmd]);
+    // !chatcmd: intercmd proc
+    const spcmd = new RegExp(/^(.+?) (.+?)$/).exec(keywords[COMMAND_SUFFIX + cmd]);
     const intercmd = spcmd[1];
     const proc = spcmd[2];
     console.log(intercmd, proc);
@@ -363,7 +365,7 @@ function commentFormatter(name, comment) {
 }
 
 function DispatchComment(username, name, comment) {
-  if (comment.startsWith('!!')) {
+  if (comment.startsWith(COMMAND_SUFFIX)) {
     CreateCommentView(comment);
     return;
   }
